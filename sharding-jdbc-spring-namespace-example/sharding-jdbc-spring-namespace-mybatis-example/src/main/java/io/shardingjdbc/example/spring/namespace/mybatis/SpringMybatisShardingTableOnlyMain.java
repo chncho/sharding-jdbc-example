@@ -17,17 +17,39 @@
 
 package io.shardingjdbc.example.spring.namespace.mybatis;
 
+import io.shardingjdbc.core.keygen.DefaultKeyGenerator;
 import io.shardingjdbc.example.spring.namespace.mybatis.service.DemoService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public final class SpringMybatisShardingTableOnlyMain {
     
     // CHECKSTYLE:OFF
     public static void main(final String[] args) {
     // CHECKSTYLE:ON
+//        DefaultKeyGenerator generator = new DefaultKeyGenerator();
+//        for(int i=0;i<1000;i++){
+//            System.out.println(generator.generateKey());
+//        }
+//
+//        if(true) return ;
+
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("META-INF/mybatisShardingTableOnlyContext.xml");
         DemoService demoService = applicationContext.getBean(DemoService.class);
         demoService.demo();
+//        Calendar calendatFrom = Calendar.getInstance();
+//        Calendar calendatTo = Calendar.getInstance();
+
+//        calendatFrom.set(2018,4-1,1,0,0,0);
+//        calendatTo.set(2018,6-1,1,0,0,0);
+
+//        demoService.testFind(calendatFrom.getTime(),calendatTo.getTime());
+
+//        demoService.testInsertSelect(calendatFrom.getTime(),calendatTo.getTime());
+//        demoService.testFind2(calendatFrom.getTime());
+
     }
 }

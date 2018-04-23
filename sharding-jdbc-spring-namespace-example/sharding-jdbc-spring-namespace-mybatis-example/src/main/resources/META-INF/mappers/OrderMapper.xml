@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.shardingjdbc.example.spring.namespace.mybatis.repository.OrderRepository">
+
+
+    <resultMap id="baseResultMap" type="io.shardingjdbc.example.spring.namespace.mybatis.entity.Order">
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="order_id" property="orderId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="count_date" property="countDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
     <update id="createIfNotExistsTable">
-        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, status VARCHAR(50), PRIMARY KEY (order_id));
+        CREATE TABLE IF NOT EXISTS t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, status VARCHAR(50),
+                count_date TIMESTAMP,
+        PRIMARY KEY (order_id)
+        );
     </update>
 
     <update id="truncateTable">
@@ -15,15 +27,38 @@
     
     <insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
         INSERT INTO t_order (
-          user_id, status
+          user_id, status,count_date
         )
         VALUES (
         #{userId,jdbcType=INTEGER},
-        #{status,jdbcType=VARCHAR}
+        #{status,jdbcType=VARCHAR},
+        #{countDate,jdbcType=TIMESTAMP}
         )
     </insert>
     
     <delete id="delete">
         DELETE FROM t_order WHERE order_id = #{orderId,jdbcType=INTEGER}
     </delete>
+
+
+    <select id="find" resultMap="baseResultMap">
+        select * from t_order
+        where count_date>=#{from,jdbcType=TIMESTAMP}
+        and count_date &lt; #{to,jdbcType=TIMESTAMP}
+    </select>
+    <select id="find3" resultMap="baseResultMap">
+        select * from t_order
+        where count_date BETWEEN  #{from,jdbcType=TIMESTAMP} and  #{to,jdbcType=TIMESTAMP}
+    </select>
+    <select id="find2" resultMap="baseResultMap">
+        select * from t_order
+        where count_date=#{eqDate,jdbcType=TIMESTAMP}
+    </select>
+    <insert id="insertSelect">
+        INSERT INTO t_order_group ( order_counts,user_id,count_date_trunc,create_date )
+        SELECT count(order_id),user_id,DATE_FORMAT(count_date, '%Y-%m-%d'),NOW()
+        from t_order
+        where count_date BETWEEN  #{from,jdbcType=TIMESTAMP} and  #{to,jdbcType=TIMESTAMP}
+        group by user_id
+    </insert>
 </mapper>

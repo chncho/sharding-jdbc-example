@@ -18,15 +18,28 @@
 package io.shardingjdbc.example.spring.namespace.mybatis.repository;
 
 import io.shardingjdbc.example.spring.namespace.mybatis.entity.Order;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 public interface OrderRepository {
     
     void createIfNotExistsTable();
     
     void truncateTable();
-    
+
     Long insert(Order model);
-    
+
+    List<Order> find(@Param("from") Date from,@Param("to") Date to);
+    List<Order> find2(@Param("eqDate") Date eqDate);
+
+    List<Order> find3(@Param("from") Date from,@Param("to") Date to);
+
+
+    void insertSelect(@Param("from") Date from,@Param("to") Date to);
+
+
     void delete(Long orderId);
     
     void dropTable();

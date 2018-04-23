@@ -17,6 +17,8 @@
 
 package io.shardingjdbc.example.spring.namespace.mybatis.entity;
 
+import java.util.Date;
+
 public final class Order {
     
     private long orderId;
@@ -24,11 +26,21 @@ public final class Order {
     private int userId;
     
     private String status;
+
+    private Date countDate;
     
     public long getOrderId() {
         return orderId;
     }
-    
+
+    public Date getCountDate() {
+        return countDate;
+    }
+
+    public void setCountDate(Date countDate) {
+        this.countDate = countDate;
+    }
+
     public void setOrderId(final long orderId) {
         this.orderId = orderId;
     }
